@@ -1,0 +1,1692 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog — Liftabit | Software Built for You</title>
+  <meta name="description"
+    content="Insights, tutorials, and industry perspectives from the Liftabit team — covering web development, design, mobile, cloud, and the business of software." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet" />
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    :root {
+      --orange: #ff7700;
+      --orange-dim: rgba(255, 119, 0, 0.12);
+      --orange-glow: rgba(255, 119, 0, 0.22);
+      --ink: #0a0a0a;
+      --ink-2: #2e2e2e;
+      --ink-3: #6b6b6b;
+      --ink-4: #a0a0a0;
+      --surface: #f9f8f6;
+      --surface-2: #f2f0ec;
+      --white: #ffffff;
+      --border: rgba(0, 0, 0, 0.07);
+      --border-2: rgba(0, 0, 0, 0.12);
+      --r: 16px;
+      --r-lg: 24px;
+      --easing: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      --font: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; overflow-x: hidden; width: 100% }
+
+    body {
+      font-family: var(--font);
+      background: var(--white);
+      color: var(--ink);
+      overflow-x: hidden;
+      width: 100%;
+      -webkit-font-smoothing: antialiased;
+      position: relative
+    }
+
+    ::-webkit-scrollbar { width: 4px }
+    ::-webkit-scrollbar-track { background: var(--surface) }
+    ::-webkit-scrollbar-thumb { background: var(--orange); border-radius: 4px }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      padding: 0 clamp(16px, 5vw, 72px);
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(20px) saturate(160%);
+      border-bottom: 1px solid var(--border);
+      transition: box-shadow 0.3s, background 0.3s;
+    }
+
+    nav.scrolled { box-shadow: 0 4px 32px rgba(0, 0, 0, 0.08) }
+
+    .nav-logo-wrap { display: inline-flex; align-items: center; text-decoration: none; flex-shrink: 0; z-index: 10 }
+    .nav-logo-img { height: 32px; width: auto; display: block; object-fit: contain }
+    .footer-logo-wrap { display: inline-flex; align-items: center; text-decoration: none; margin-bottom: 16px }
+    .footer-logo-img { height: 38px; width: auto; display: block; object-fit: contain }
+
+    .nav-links {
+      display: flex;
+      gap: clamp(12px, 2vw, 28px);
+      list-style: none;
+      align-items: center;
+      flex-wrap: nowrap
+    }
+
+    .nav-links a {
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--ink-3);
+      text-decoration: none;
+      letter-spacing: 0.01em;
+      transition: color 0.2s;
+      position: relative;
+    }
+
+    .nav-links a:not(.nav-cta)::after {
+      content: '';
+      position: absolute;
+      bottom: -3px; left: 0;
+      width: 0; height: 1.5px;
+      background: var(--orange);
+      border-radius: 2px;
+      transition: width 0.25s var(--easing);
+    }
+
+    .nav-links a:not(.nav-cta):hover::after { width: 100% }
+    .nav-links a:hover { color: var(--ink) }
+    .nav-links a.active { color: var(--orange) }
+    .nav-links a.active::after { width: 100% }
+
+    .nav-cta {
+      background: var(--ink) !important;
+      color: var(--white) !important;
+      padding: 9px 22px;
+      border-radius: 100px;
+      font-weight: 600 !important;
+      font-size: 0.8rem !important;
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s !important;
+      letter-spacing: 0.01em;
+    }
+
+    .nav-cta:hover {
+      background: var(--orange) !important;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(255, 119, 0, 0.3) !important
+    }
+
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      cursor: pointer;
+      padding: 8px;
+      background: none;
+      border: none;
+      z-index: 10;
+      flex-shrink: 0;
+    }
+
+    .nav-hamburger span {
+      width: 22px; height: 2px;
+      background: var(--ink);
+      border-radius: 2px;
+      transition: transform 0.3s var(--easing), opacity 0.3s;
+      display: block;
+    }
+
+    .nav-hamburger.is-open span:nth-child(1) { transform: translateY(7px) rotate(45deg) }
+    .nav-hamburger.is-open span:nth-child(2) { opacity: 0; transform: scaleX(0) }
+    .nav-hamburger.is-open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg) }
+
+    .mobile-nav {
+      position: fixed;
+      top: 64px; left: 0; right: 0;
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      z-index: 998;
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height 0.38s var(--easing), box-shadow 0.3s;
+      box-shadow: none;
+    }
+
+    .mobile-nav.open { max-height: 400px; box-shadow: 0 16px 48px rgba(0, 0, 0, 0.1) }
+
+    .mobile-nav-inner {
+      padding: 8px clamp(16px, 5vw, 72px) 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .mobile-nav a.mobile-link {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--ink-2);
+      text-decoration: none;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: color 0.2s, padding-left 0.2s;
+    }
+
+    .mobile-nav a.mobile-link::after { content: '→'; font-size: 0.82rem; color: var(--ink-4); transition: transform 0.2s, color 0.2s }
+    .mobile-nav a.mobile-link:hover { color: var(--orange); padding-left: 6px }
+    .mobile-nav a.mobile-link:hover::after { transform: translateX(4px); color: var(--orange) }
+
+    .mobile-nav a.mobile-cta {
+      display: block;
+      text-align: center;
+      margin-top: 14px;
+      background: var(--orange);
+      color: var(--white) !important;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 700;
+      padding: 13px 20px;
+      border-radius: var(--r);
+      transition: background 0.2s, transform 0.2s;
+      letter-spacing: 0.01em;
+    }
+
+    .mobile-nav a.mobile-cta:hover { background: #ff9533; transform: translateY(-1px) }
+
+    .nav-overlay {
+      position: fixed;
+      inset: 0;
+      top: 64px;
+      background: rgba(0, 0, 0, 0);
+      z-index: 997;
+      pointer-events: none;
+      transition: background 0.3s;
+    }
+
+    .nav-overlay.show { background: rgba(0, 0, 0, 0.28); pointer-events: all }
+
+    /* ─── SHARED ─── */
+    section { position: relative; z-index: 1 }
+
+    .wrap {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 clamp(16px, 5vw, 72px);
+      width: 100%
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 20px;
+    }
+
+    .eyebrow::before {
+      content: '';
+      width: 24px; height: 1.5px;
+      background: var(--orange);
+      flex-shrink: 0
+    }
+
+    .section-h {
+      font-size: clamp(2rem, 4.5vw, 3.4rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1.08;
+      color: var(--ink);
+    }
+
+    .section-p {
+      font-size: clamp(0.9rem, 1.5vw, 1rem);
+      color: var(--ink-3);
+      line-height: 1.72;
+      font-weight: 400;
+      max-width: 520px;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s var(--easing), transform 0.7s var(--easing)
+    }
+
+    .reveal.in { opacity: 1; transform: translateY(0) }
+
+    .d1 { transition-delay: 0.1s }
+    .d2 { transition-delay: 0.18s }
+    .d3 { transition-delay: 0.26s }
+    .d4 { transition-delay: 0.34s }
+    .d5 { transition-delay: 0.42s }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 32px;
+      border-radius: 100px;
+      font-family: var(--font);
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.25s var(--easing);
+      letter-spacing: 0.01em;
+      border: none;
+    }
+
+    .btn-dark { background: var(--ink); color: var(--white); box-shadow: 0 6px 24px rgba(10, 10, 10, 0.2) }
+    .btn-dark:hover { background: var(--orange); transform: translateY(-2px); box-shadow: 0 10px 30px rgba(255, 119, 0, 0.35) }
+    .btn-outline { background: transparent; color: var(--ink); border: 1.5px solid var(--border-2) }
+    .btn-outline:hover { border-color: var(--orange); color: var(--orange); transform: translateY(-2px) }
+    .btn-orange { background: var(--orange); color: var(--white); box-shadow: 0 6px 24px rgba(255, 119, 0, 0.35) }
+    .btn-orange:hover { background: #ff9533; transform: translateY(-2px); box-shadow: 0 10px 30px rgba(255, 119, 0, 0.5) }
+    .btn-ghost { background: transparent; color: rgba(255, 255, 255, 0.6); border: 1.5px solid rgba(255, 255, 255, 0.15) }
+    .btn-ghost:hover { border-color: rgba(255, 255, 255, 0.4); color: var(--white); transform: translateY(-2px) }
+    .btn-arrow::after { content: '→'; transition: transform 0.2s }
+    .btn-arrow:hover::after { transform: translateX(4px) }
+
+    /* ═══════════════════════════════
+   PAGE HERO
+═══════════════════════════════ */
+    #page-hero {
+      padding: 120px clamp(16px, 5vw, 72px) 80px;
+      background: var(--white);
+      overflow: hidden;
+      position: relative;
+    }
+
+    #page-hero::before {
+      content: '';
+      position: absolute;
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 119, 0, 0.07) 0%, transparent 70%);
+      top: -200px; right: -200px;
+      pointer-events: none;
+      z-index: 0;
+      animation: orbFloat 10s ease-in-out infinite;
+    }
+
+    .page-hero-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      width: 100%;
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+
+    .page-hero-left .eyebrow { animation: fadeUp 0.6s 0.1s both }
+
+    .page-title {
+      font-size: clamp(2.6rem, 5.5vw, 5rem);
+      font-weight: 800;
+      line-height: 1.04;
+      letter-spacing: -0.05em;
+      color: var(--ink);
+      animation: fadeUp 0.7s 0.2s both;
+      margin-bottom: 16px;
+    }
+
+    .page-title .accent { color: var(--orange) }
+
+    .page-desc {
+      font-size: clamp(0.9rem, 1.4vw, 1.05rem);
+      color: var(--ink-3);
+      line-height: 1.74;
+      font-weight: 400;
+      max-width: 440px;
+      animation: fadeUp 0.7s 0.32s both;
+    }
+
+    .page-hero-right {
+      animation: fadeUp 0.7s 0.4s both;
+      flex-shrink: 0;
+    }
+
+    /* ═══════════════════════════════
+   CATEGORY FILTER BAR
+═══════════════════════════════ */
+    #filter-bar {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 0;
+      position: sticky;
+      top: 64px;
+      z-index: 100;
+    }
+
+    .filter-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 clamp(16px, 5vw, 72px);
+      display: flex;
+      gap: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .filter-inner::-webkit-scrollbar { display: none }
+
+    .filter-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 16px 20px;
+      font-family: var(--font);
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--ink-4);
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s var(--easing);
+      white-space: nowrap;
+      letter-spacing: 0.03em;
+    }
+
+    .filter-btn:hover { color: var(--ink); border-bottom-color: var(--border-2) }
+
+    .filter-btn.active {
+      color: var(--orange);
+      border-bottom-color: var(--orange);
+    }
+
+    .filter-count {
+      background: var(--orange-dim);
+      color: var(--orange);
+      font-size: 0.62rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 100px;
+    }
+
+    .filter-btn.active .filter-count {
+      background: var(--orange);
+      color: var(--white);
+    }
+
+    /* ═══════════════════════════════
+   FEATURED POST
+═══════════════════════════════ */
+    #featured-post {
+      padding: clamp(60px, 8vw, 100px) 0 0;
+      background: var(--white);
+    }
+
+    .featured-card {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(32px, 6vw, 80px);
+      align-items: center;
+      background: var(--surface);
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      transition: box-shadow 0.35s var(--easing);
+    }
+
+    .featured-card:hover { box-shadow: 0 24px 72px rgba(0, 0, 0, 0.1) }
+
+    .featured-img-wrap { position: relative; overflow: hidden }
+
+    .featured-img {
+      width: 100%;
+      height: 100%;
+      min-height: 360px;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s var(--easing);
+    }
+
+    .featured-card:hover .featured-img { transform: scale(1.04) }
+
+    .featured-body {
+      padding: clamp(32px, 5vw, 60px);
+      padding-left: 0;
+    }
+
+    @media(max-width:768px) {
+      .featured-body { padding: clamp(24px, 4vw, 40px) }
+    }
+
+    .post-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .post-tag {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 100px;
+      background: var(--orange-dim);
+      color: var(--orange);
+    }
+
+    .post-date {
+      font-size: 0.72rem;
+      color: var(--ink-4);
+      font-weight: 500;
+    }
+
+    .post-read-time {
+      font-size: 0.72rem;
+      color: var(--ink-4);
+      font-weight: 500;
+    }
+
+    .post-meta-sep { color: var(--ink-4); font-size: 0.7rem }
+
+    .featured-title {
+      font-size: clamp(1.4rem, 2.5vw, 2rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.18;
+      color: var(--ink);
+      margin-bottom: 16px;
+      text-decoration: none;
+      display: block;
+      transition: color 0.2s;
+    }
+
+    .featured-title:hover { color: var(--orange) }
+
+    .featured-excerpt {
+      font-size: 0.9rem;
+      color: var(--ink-3);
+      line-height: 1.72;
+      margin-bottom: 28px;
+    }
+
+    .featured-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .author-av {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      object-position: center top;
+      border: 2px solid var(--border-2);
+      flex-shrink: 0;
+    }
+
+    .author-name {
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -0.01em;
+    }
+
+    .author-role {
+      font-size: 0.72rem;
+      color: var(--ink-4);
+    }
+
+    /* ═══════════════════════════════
+   BLOG GRID
+═══════════════════════════════ */
+    #blog-grid {
+      padding: clamp(60px, 8vw, 100px) 0;
+      background: var(--white);
+    }
+
+    .blog-grid-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+    }
+
+    .blog-grid-head h2 {
+      font-size: 1.4rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+    }
+
+    .blog-grid-head a {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--orange);
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+
+    .blog-grid-head a:hover { opacity: 0.7 }
+
+    .blog-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: clamp(20px, 3vw, 28px);
+    }
+
+    .blog-card {
+      background: var(--white);
+      border-radius: var(--r-lg);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      transition: all 0.32s var(--easing);
+      display: flex;
+      flex-direction: column;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .blog-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 56px rgba(0, 0, 0, 0.08);
+      border-color: rgba(255, 119, 0, 0.22);
+    }
+
+    .blog-card-img-wrap { position: relative; overflow: hidden }
+
+    .blog-card-img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s var(--easing);
+    }
+
+    .blog-card:hover .blog-card-img { transform: scale(1.05) }
+
+    .blog-card-body {
+      padding: clamp(20px, 2.5vw, 28px);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .blog-card-title {
+      font-size: clamp(0.95rem, 1.4vw, 1.08rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.3;
+      color: var(--ink);
+      margin: 12px 0 10px;
+      transition: color 0.2s;
+    }
+
+    .blog-card:hover .blog-card-title { color: var(--orange) }
+
+    .blog-card-excerpt {
+      font-size: 0.82rem;
+      color: var(--ink-3);
+      line-height: 1.65;
+      flex: 1;
+    }
+
+    .blog-card-footer {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .blog-card-footer .author-av { width: 32px; height: 32px }
+
+    .blog-card-footer-name {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--ink-2);
+    }
+
+    .blog-card-footer-date {
+      font-size: 0.72rem;
+      color: var(--ink-4);
+    }
+
+    .blog-card-footer-sep { color: var(--border-2); margin: 0 2px }
+
+    /* ═══════════════════════════════
+   NEWSLETTER STRIP
+═══════════════════════════════ */
+    #newsletter {
+      padding: clamp(60px, 8vw, 100px) 0;
+      background: var(--surface);
+    }
+
+    .newsletter-inner {
+      background: var(--ink);
+      border-radius: var(--r-lg);
+      padding: clamp(40px, 6vw, 72px) clamp(32px, 5vw, 60px);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(32px, 5vw, 64px);
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .newsletter-inner::before {
+      content: '';
+      position: absolute;
+      width: 400px; height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 119, 0, 0.1) 0%, transparent 70%);
+      right: -100px; top: -100px;
+      pointer-events: none;
+    }
+
+    .newsletter-text { position: relative; z-index: 1 }
+
+    .newsletter-text .eyebrow { color: rgba(255, 119, 0, 0.9) }
+    .newsletter-text .eyebrow::before { background: rgba(255, 119, 0, 0.9) }
+
+    .newsletter-text h2 {
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      color: var(--white);
+      margin-bottom: 12px;
+    }
+
+    .newsletter-text p {
+      font-size: 0.88rem;
+      color: rgba(255, 255, 255, 0.4);
+      line-height: 1.68;
+    }
+
+    .newsletter-form {
+      position: relative;
+      z-index: 1;
+    }
+
+    .newsletter-input-wrap {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .newsletter-input {
+      flex: 1;
+      padding: 14px 18px;
+      border-radius: var(--r);
+      border: 1.5px solid rgba(255, 255, 255, 0.1);
+      font-family: var(--font);
+      font-size: 0.88rem;
+      color: var(--white);
+      background: rgba(255, 255, 255, 0.06);
+      outline: none;
+      transition: all 0.22s var(--easing);
+    }
+
+    .newsletter-input::placeholder { color: rgba(255, 255, 255, 0.3) }
+    .newsletter-input:focus { border-color: var(--orange); background: rgba(255, 255, 255, 0.1) }
+
+    .newsletter-btn {
+      padding: 14px 24px;
+      border-radius: var(--r);
+      background: var(--orange);
+      color: var(--white);
+      font-family: var(--font);
+      font-size: 0.86rem;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      transition: all 0.25s var(--easing);
+      white-space: nowrap;
+    }
+
+    .newsletter-btn:hover { background: #ff9533; transform: translateY(-2px) }
+
+    .newsletter-note {
+      font-size: 0.72rem;
+      color: rgba(255, 255, 255, 0.25);
+    }
+
+    /* ═══════════════════════════════
+   MORE POSTS — WIDE CARDS
+═══════════════════════════════ */
+    #more-posts {
+      padding: clamp(60px, 8vw, 100px) 0;
+      background: var(--white);
+    }
+
+    .more-posts-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+    }
+
+    .more-posts-head h2 {
+      font-size: 1.4rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+    }
+
+    .more-posts-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .list-post {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: clamp(20px, 3vw, 36px);
+      align-items: center;
+      padding: clamp(20px, 3vw, 28px) 0;
+      border-bottom: 1px solid var(--border);
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.25s var(--easing);
+    }
+
+    .list-post:first-child { border-top: 1px solid var(--border) }
+
+    .list-post:hover { background: var(--surface); padding-left: 16px; padding-right: 16px; border-radius: var(--r); margin: 0 -16px; border-color: transparent }
+
+    .list-post-img {
+      width: 100%;
+      height: 130px;
+      object-fit: cover;
+      border-radius: var(--r);
+      display: block;
+      transition: transform 0.4s var(--easing);
+    }
+
+    .list-post:hover .list-post-img { transform: scale(1.03) }
+
+    .list-post-img-wrap { overflow: hidden; border-radius: var(--r); flex-shrink: 0 }
+
+    .list-post-title {
+      font-size: clamp(0.98rem, 1.4vw, 1.1rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.3;
+      color: var(--ink);
+      margin: 10px 0 8px;
+      transition: color 0.2s;
+    }
+
+    .list-post:hover .list-post-title { color: var(--orange) }
+
+    .list-post-excerpt {
+      font-size: 0.82rem;
+      color: var(--ink-3);
+      line-height: 1.62;
+      margin-bottom: 14px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .list-post-footer {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .list-post-footer .author-av { width: 28px; height: 28px }
+
+    .list-post-footer-name { font-size: 0.76rem; font-weight: 600; color: var(--ink-2) }
+    .list-post-footer-date { font-size: 0.72rem; color: var(--ink-4) }
+
+    /* ═══════════════════════════════
+   CTA BANNER
+═══════════════════════════════ */
+    #cta-banner {
+      padding: clamp(100px, 12vw, 160px) 0;
+      background: var(--surface);
+      position: relative;
+    }
+
+    .cta-inner {
+      background: var(--ink);
+      border-radius: 32px;
+      padding: clamp(60px, 8vw, 100px) clamp(32px, 5vw, 72px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 32px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 32px 80px -16px rgba(10, 10, 10, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .cta-inner::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: 
+        radial-gradient(circle at top right, rgba(255, 119, 0, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at bottom left, rgba(255, 119, 0, 0.12) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .cta-text { position: relative; z-index: 1 }
+
+    .cta-text h2 {
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1.1;
+      color: var(--white);
+      margin-bottom: 20px;
+    }
+
+    .cta-text p {
+      font-size: 1.05rem;
+      color: rgba(255, 255, 255, 0.65);
+      max-width: 520px;
+      line-height: 1.68;
+      margin: 0 auto;
+    }
+
+    .cta-actions { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; position: relative; z-index: 1; margin-top: 8px; }
+    
+    .cta-actions .btn-orange, .cta-actions .btn-ghost {
+      font-size: 0.95rem;
+      padding: 18px 40px;
+    }
+
+    /* ═══════════════════════════════
+   FOOTER
+═══════════════════════════════ */
+    footer {
+      background: var(--ink);
+      padding: clamp(60px, 8vw, 100px) 0 0;
+      color: white
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: clamp(32px, 5vw, 72px);
+      padding-bottom: 52px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    }
+
+    .footer-brand p {
+      font-size: 0.82rem;
+      color: rgba(255, 255, 255, 0.35);
+      line-height: 1.72;
+      max-width: 260px;
+      margin-bottom: 28px
+    }
+
+    .footer-socials { display: flex; gap: 10px }
+
+    .f-social {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .f-social svg { width: 14px; height: 14px; stroke: rgba(255, 255, 255, 0.4); fill: none; stroke-width: 2 }
+    .f-social:hover { background: var(--orange); border-color: var(--orange) }
+    .f-social:hover svg { stroke: white }
+
+    .footer-col h5 {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.5);
+      margin-bottom: 20px
+    }
+
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px }
+
+    .footer-col a {
+      font-size: 0.82rem;
+      color: rgba(255, 255, 255, 0.35);
+      text-decoration: none;
+      transition: color 0.2s;
+      position: relative;
+    }
+
+    .footer-col a::after {
+      content: '';
+      position: absolute;
+      bottom: -2px; left: 0;
+      width: 0; height: 1px;
+      background: var(--orange);
+      transition: width 0.25s var(--easing);
+    }
+
+    .footer-col a:hover { color: var(--orange) }
+    .footer-col a:hover::after { width: 100% }
+
+    .footer-bottom {
+      padding: 24px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .footer-bottom p, .footer-bottom a { font-size: 0.75rem; color: rgba(255, 255, 255, 0.2); text-decoration: none }
+    .footer-bottom a:hover { color: rgba(255, 255, 255, 0.4) }
+    .footer-bottom b { color: var(--orange) }
+
+    /* ─── Animations ─── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px) }
+      to { opacity: 1; transform: translateY(0) }
+    }
+
+    @keyframes orbFloat {
+      0%, 100% { transform: translateY(0) scale(1) }
+      50% { transform: translateY(-30px) scale(1.06) }
+    }
+
+    /* hidden posts (for filter) */
+    .blog-card[data-hidden="true"] { display: none }
+    .list-post[data-hidden="true"] { display: none }
+
+    /* ═══════════════════════════════
+   RESPONSIVE
+═══════════════════════════════ */
+    @media(min-width:761px) and (max-width:960px) {
+      nav { padding: 0 clamp(16px, 3vw, 40px) }
+      .nav-links { gap: clamp(10px, 1.5vw, 20px) }
+      .nav-links a { font-size: 0.76rem }
+      .nav-cta { padding: 8px 16px !important; font-size: 0.74rem !important }
+    }
+
+    @media(max-width:1100px) {
+      .footer-grid { grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: clamp(24px, 3vw, 48px) }
+    }
+
+    @media(max-width:960px) {
+      .nav-links { display: none }
+      .nav-hamburger { display: flex }
+      .featured-card { grid-template-columns: 1fr }
+      .featured-img { min-height: 280px }
+      .featured-body { padding: clamp(24px, 4vw, 40px) }
+      .blog-grid { grid-template-columns: repeat(2, 1fr) }
+      .newsletter-inner { grid-template-columns: 1fr }
+      .list-post { grid-template-columns: 160px 1fr }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 36px }
+      .cta-inner { flex-direction: column }
+      .page-hero-inner { flex-direction: column }
+    }
+
+    @media(max-width:640px) {
+      .wrap { padding: 0 clamp(16px, 5vw, 24px) }
+      .blog-grid { grid-template-columns: 1fr }
+      .list-post { grid-template-columns: 1fr }
+      .list-post-img-wrap { display: none }
+      .newsletter-input-wrap { flex-direction: column }
+      .footer-grid { grid-template-columns: 1fr; gap: 28px }
+      .footer-bottom { flex-direction: column; text-align: center; gap: 6px }
+      .footer-brand p { max-width: 100% }
+    }
+
+    @media(max-width:400px) {
+      .page-title { font-size: 2rem }
+      .section-h { font-size: 1.75rem }
+      .nav-logo-img { height: 26px }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAV -->
+  <nav id="mainNav">
+    <a href="liftabit.html" class="nav-logo-wrap">
+      <img src="logo2.svg" alt="Liftabit" class="nav-logo-img" />
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="about.html">About</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="blog.html" class="active">Blog</a></li>
+      <li><a href="liftabit.html#why">Why Us</a></li>
+      <li><a href="liftabit.html#contact" class="nav-cta">Get Started</a></li>
+    </ul>
+    <button class="nav-hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="mobile-nav" id="mobileNav" role="navigation" aria-label="Mobile navigation">
+    <div class="mobile-nav-inner">
+      <a href="about.html" class="mobile-link">About</a>
+      <a href="services.html" class="mobile-link">Services</a>
+      <a href="blog.html" class="mobile-link">Blog</a>
+      <a href="liftabit.html#why" class="mobile-link">Why Us</a>
+      <a href="liftabit.html#contact" class="mobile-cta">Get Started</a>
+    </div>
+  </div>
+
+  <div class="nav-overlay" id="navOverlay"></div>
+
+  <!-- ─── PAGE HERO ─── -->
+  <section id="page-hero">
+    <div class="page-hero-inner">
+      <div class="page-hero-left">
+        <div class="eyebrow">Liftabit Blog</div>
+        <h1 class="page-title">Insights from<br /><span class="accent">builders, for builders.</span></h1>
+        <p class="page-desc">
+          Engineering deep-dives, design thinking, product strategy, and the lessons we've learned
+          shipping software for 30+ clients across 10+ industries.
+        </p>
+      </div>
+      <div class="page-hero-right">
+        <a href="liftabit.html#contact" class="btn btn-dark btn-arrow">Start a Project</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FILTER BAR ─── -->
+  <div id="filter-bar">
+    <div class="filter-inner">
+      <button class="filter-btn active" data-filter="all" id="filter-all">
+        All <span class="filter-count">12</span>
+      </button>
+      <button class="filter-btn" data-filter="engineering">
+        Engineering <span class="filter-count">4</span>
+      </button>
+      <button class="filter-btn" data-filter="design">
+        Design <span class="filter-count">3</span>
+      </button>
+      <button class="filter-btn" data-filter="product">
+        Product <span class="filter-count">2</span>
+      </button>
+      <button class="filter-btn" data-filter="business">
+        Business <span class="filter-count">3</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ─── FEATURED POST ─── -->
+  <section id="featured-post">
+    <div class="wrap">
+      <div class="featured-card reveal" data-category="engineering">
+        <div class="featured-img-wrap">
+          <img class="featured-img"
+            src="https://images.unsplash.com/photo-1547658719-da2b51169166?w=900&auto=format&fit=crop&q=80"
+            alt="Building scalable web applications" />
+        </div>
+        <div class="featured-body">
+          <div class="post-meta">
+            <span class="post-tag">Engineering</span>
+            <span class="post-meta-sep">·</span>
+            <span class="post-date">May 28, 2026</span>
+            <span class="post-meta-sep">·</span>
+            <span class="post-read-time">8 min read</span>
+          </div>
+          <a href="#" class="featured-title">
+            Why We Chose Next.js App Router for Every New Client Project in 2026
+          </a>
+          <p class="featured-excerpt">
+            After shipping 12 web applications this year, we've solidified our stance: the Next.js App Router
+            paired with React Server Components isn't just a trend — it's the architecture that makes the most
+            sense for performance-critical, SEO-dependent products. Here's everything we learned.
+          </p>
+          <div class="featured-author">
+            <img class="author-av"
+              src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&auto=format&fit=crop&q=80"
+              alt="Rohan Menon" />
+            <div>
+              <div class="author-name">Rohan Menon</div>
+              <div class="author-role">Co-Founder & CTO</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── BLOG GRID ─── -->
+  <section id="blog-grid">
+    <div class="wrap">
+      <div class="blog-grid-head">
+        <h2>Recent Articles</h2>
+        <a href="#">View all →</a>
+      </div>
+
+      <div class="blog-grid" id="blogGrid">
+
+        <a href="#" class="blog-card reveal" data-category="design">
+          <div class="blog-card-img-wrap">
+            <img class="blog-card-img"
+              src="https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=600&auto=format&fit=crop&q=75"
+              alt="Design systems" />
+          </div>
+          <div class="blog-card-body">
+            <div class="post-meta">
+              <span class="post-tag">Design</span>
+              <span class="post-meta-sep">·</span>
+              <span class="post-read-time">6 min</span>
+            </div>
+            <div class="blog-card-title">The Design System Approach That Saved 3 Weeks on Our Last Project</div>
+            <p class="blog-card-excerpt">How a well-structured component library and design token system cut our design-to-development handoff time by 60%.</p>
+            <div class="blog-card-footer">
+              <img class="author-av"
+                src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&auto=format&fit=crop&q=80"
+                alt="Priya Suresh" />
+              <div>
+                <div class="blog-card-footer-name">Priya Suresh</div>
+                <div class="blog-card-footer-date">May 20, 2026</div>
+              </div>
+            </div>
+          </div>
+        </a>
+
+        <a href="#" class="blog-card reveal d1" data-category="engineering">
+          <div class="blog-card-img-wrap">
+            <img class="blog-card-img"
+              src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&auto=format&fit=crop&q=75"
+              alt="Cloud architecture" />
+          </div>
+          <div class="blog-card-body">
+            <div class="post-meta">
+              <span class="post-tag">Engineering</span>
+              <span class="post-meta-sep">·</span>
+              <span class="post-read-time">10 min</span>
+            </div>
+            <div class="blog-card-title">Zero-Downtime Deployments: Our Kubernetes Playbook</div>
+            <p class="blog-card-excerpt">The exact strategy we use to ship to production dozens of times per day with zero user impact, even for database migrations.</p>
+            <div class="blog-card-footer">
+              <img class="author-av"
+                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&auto=format&fit=crop&q=80"
+                alt="Arjun Iyer" />
+              <div>
+                <div class="blog-card-footer-name">Arjun Iyer</div>
+                <div class="blog-card-footer-date">May 14, 2026</div>
+              </div>
+            </div>
+          </div>
+        </a>
+
+        <a href="#" class="blog-card reveal d2" data-category="product">
+          <div class="blog-card-img-wrap">
+            <img class="blog-card-img"
+              src="https://images.unsplash.com/photo-1551434678-e076c223a692?w=600&auto=format&fit=crop&q=75"
+              alt="Product strategy" />
+          </div>
+          <div class="blog-card-body">
+            <div class="post-meta">
+              <span class="post-tag">Product</span>
+              <span class="post-meta-sep">·</span>
+              <span class="post-read-time">7 min</span>
+            </div>
+            <div class="blog-card-title">Before You Write a Line of Code: The Discovery Sprint That Saves Startups</div>
+            <p class="blog-card-excerpt">Why the most valuable work we do happens before development begins — and the five questions every founder needs to answer first.</p>
+            <div class="blog-card-footer">
+              <img class="author-av"
+                src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=80&h=80&auto=format&fit=crop&q=80"
+                alt="Divya Krishnan" />
+              <div>
+                <div class="blog-card-footer-name">Divya Krishnan</div>
+                <div class="blog-card-footer-date">May 7, 2026</div>
+              </div>
+            </div>
+          </div>
+        </a>
+
+        <a href="#" class="blog-card reveal" data-category="business">
+          <div class="blog-card-img-wrap">
+            <img class="blog-card-img"
+              src="https://images.unsplash.com/photo-1563986768609-322da13575f3?w=600&auto=format&fit=crop&q=75"
+              alt="Business software" />
+          </div>
+          <div class="blog-card-body">
+            <div class="post-meta">
+              <span class="post-tag">Business</span>
+              <span class="post-meta-sep">·</span>
+              <span class="post-read-time">5 min</span>
+            </div>
+            <div class="blog-card-title">How to Evaluate a Software Agency (Without Getting Burned)</div>
+            <p class="blog-card-excerpt">After talking to hundreds of business owners, we identified the five red flags that always precede a failed agency relationship.</p>
+            <div class="blog-card-footer">
+              <img class="author-av"
+                src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=80&h=80&auto=format&fit=crop&q=80"
+                alt="Divya Krishnan" />
+              <div>
+                <div class="blog-card-footer-name">Divya Krishnan</div>
+                <div class="blog-card-footer-date">Apr 29, 2026</div>
+              </div>
+            </div>
+          </div>
+        </a>
+
+        <a href="#" class="blog-card reveal d1" data-category="design">
+          <div class="blog-card-img-wrap">
+            <img class="blog-card-img"
+              src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=600&auto=format&fit=crop&q=75"
+              alt="Mobile UX" />
+          </div>
+          <div class="blog-card-body">
+            <div class="post-meta">
+              <span class="post-tag">Design</span>
+              <span class="post-meta-sep">·</span>
+              <span class="post-read-time">9 min</span>
+            </div>
+            <div class="blog-card-title">Mobile-First Is Dead. Device-Agnostic Thinking Is What Wins.</div>
+            <p class="blog-card-excerpt">Why designing for "mobile first" often produces mediocre desktop experiences — and the mental model shift that fixes it.</p>
+            <div class="blog-card-footer">
+              <img class="author-av"
+                src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&auto=format&fit=crop&q=80"
+                alt="Priya Suresh" />
+              <div>
+                <div class="blog-card-footer-name">Priya Suresh</div>
+                <div class="blog-card-footer-date">Apr 21, 2026</div>
+              </div>
+            </div>
+          </div>
+        </a>
+
+        <a href="#" class="blog-card reveal d2" data-category="engineering">
+          <div class="blog-card-img-wrap">
+            <img class="blog-card-img"
+              src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&auto=format&fit=crop&q=75"
+              alt="Team engineering" />
+          </div>
+          <div class="blog-card-body">
+            <div class="post-meta">
+              <span class="post-tag">Engineering</span>
+              <span class="post-meta-sep">·</span>
+              <span class="post-read-time">12 min</span>
+            </div>
+            <div class="blog-card-title">Our TypeScript Style Guide: The Rules Every Team Member Follows</div>
+            <p class="blog-card-excerpt">After three years of TypeScript in production, here are the patterns we enforce, the anti-patterns we've banned, and why.</p>
+            <div class="blog-card-footer">
+              <img class="author-av"
+                src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&auto=format&fit=crop&q=80"
+                alt="Rohan Menon" />
+              <div>
+                <div class="blog-card-footer-name">Rohan Menon</div>
+                <div class="blog-card-footer-date">Apr 14, 2026</div>
+              </div>
+            </div>
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── NEWSLETTER ─── -->
+  <section id="newsletter">
+    <div class="wrap">
+      <div class="newsletter-inner reveal">
+        <div class="newsletter-text">
+          <div class="eyebrow">Stay in the Loop</div>
+          <h2>Engineering insights,<br />straight to your inbox.</h2>
+          <p>No noise. Just one well-crafted article every two weeks from the Liftabit team — covering code, design, and the business of building software.</p>
+        </div>
+        <div class="newsletter-form">
+          <div class="newsletter-input-wrap">
+            <input type="email" class="newsletter-input" id="nlEmail" placeholder="you@company.com" />
+            <button class="newsletter-btn" onclick="subscribeNL()">Subscribe →</button>
+          </div>
+          <p class="newsletter-note" id="nlNote">Join 2,400+ readers. Unsubscribe any time. No spam, ever.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── MORE POSTS ─── -->
+  <section id="more-posts">
+    <div class="wrap">
+      <div class="more-posts-head">
+        <h2>More from the Team</h2>
+        <a href="#" style="font-size:0.8rem;font-weight:600;color:var(--orange);text-decoration:none">View all →</a>
+      </div>
+
+      <div class="more-posts-list" id="morePostsList">
+
+        <a href="#" class="list-post reveal" data-category="business">
+          <div class="list-post-img-wrap">
+            <img class="list-post-img"
+              src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=400&auto=format&fit=crop&q=75"
+              alt="Cost of software" />
+          </div>
+          <div>
+            <div class="post-meta">
+              <span class="post-tag">Business</span>
+              <span class="post-meta-sep">·</span>
+              <span class="post-read-time">6 min</span>
+            </div>
+            <div class="list-post-title">The Real Cost of Cheap Software (And How to Calculate the True ROI)</div>
+            <p class="list-post-excerpt">Why the cheapest quote almost always leads to the most expensive outcome — and a framework for making smarter software investment decisions.</p>
+            <div class="list-post-footer">
+              <img class="author-av"
+                src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&auto=format&fit=crop&q=80"
+                alt="Priya Suresh" />
+              <div>
+                <div class="list-post-footer-name">Priya Suresh</div>
+                <span class="list-post-footer-date">Apr 5, 2026</span>
+              </div>
+            </div>
+          </div>
+        </a>
+
+        <a href="#" class="list-post reveal" data-category="engineering">
+          <div class="list-post-img-wrap">
+            <img class="list-post-img"
+              src="https://images.unsplash.com/photo-1551434678-e076c223a692?w=400&auto=format&fit=crop&q=75"
+              alt="Flutter vs React Native" />
+          </div>
+          <div>
+            <div class="post-meta">
+              <span class="post-tag">Engineering</span>
+              <span class="post-meta-sep">·</span>
+              <span class="post-read-time">11 min</span>
+            </div>
+            <div class="list-post-title">Flutter vs React Native in 2026: An Honest Comparison from a Team That's Shipped Both</div>
+            <p class="list-post-excerpt">We've built 8 mobile apps — 5 in Flutter, 3 in React Native. Here's exactly when to choose each, with no agenda.</p>
+            <div class="list-post-footer">
+              <img class="author-av"
+                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&auto=format&fit=crop&q=80"
+                alt="Arjun Iyer" />
+              <div>
+                <div class="list-post-footer-name">Arjun Iyer</div>
+                <span class="list-post-footer-date">Mar 28, 2026</span>
+              </div>
+            </div>
+          </div>
+        </a>
+
+        <a href="#" class="list-post reveal" data-category="product">
+          <div class="list-post-img-wrap">
+            <img class="list-post-img"
+              src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=400&auto=format&fit=crop&q=75"
+              alt="MVP scope" />
+          </div>
+          <div>
+            <div class="post-meta">
+              <span class="post-tag">Product</span>
+              <span class="post-meta-sep">·</span>
+              <span class="post-read-time">8 min</span>
+            </div>
+            <div class="list-post-title">How We Scope an MVP in 48 Hours (Without Cutting Important Corners)</div>
+            <p class="list-post-excerpt">The exact framework we use to determine what goes in a v1, what gets parked for v2, and how we get founders aligned on both.</p>
+            <div class="list-post-footer">
+              <img class="author-av"
+                src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=80&h=80&auto=format&fit=crop&q=80"
+                alt="Divya Krishnan" />
+              <div>
+                <div class="list-post-footer-name">Divya Krishnan</div>
+                <span class="list-post-footer-date">Mar 18, 2026</span>
+              </div>
+            </div>
+          </div>
+        </a>
+
+        <a href="#" class="list-post reveal" data-category="design">
+          <div class="list-post-img-wrap">
+            <img class="list-post-img"
+              src="https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=400&auto=format&fit=crop&q=75"
+              alt="Color and typography" />
+          </div>
+          <div>
+            <div class="post-meta">
+              <span class="post-tag">Design</span>
+              <span class="post-meta-sep">·</span>
+              <span class="post-read-time">7 min</span>
+            </div>
+            <div class="list-post-title">Typography & Color Done Right: Why Most SaaS Products Look Generic</div>
+            <p class="list-post-excerpt">A breakdown of the typographic and color decisions that separate premium product interfaces from everything else on the market.</p>
+            <div class="list-post-footer">
+              <img class="author-av"
+                src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&auto=format&fit=crop&q=80"
+                alt="Priya Suresh" />
+              <div>
+                <div class="list-post-footer-name">Priya Suresh</div>
+                <span class="list-post-footer-date">Mar 10, 2026</span>
+              </div>
+            </div>
+          </div>
+        </a>
+
+        <a href="#" class="list-post reveal" data-category="business">
+          <div class="list-post-img-wrap">
+            <img class="list-post-img"
+              src="https://images.unsplash.com/photo-1563986768609-322da13575f3?w=400&auto=format&fit=crop&q=75"
+              alt="Client communication" />
+          </div>
+          <div>
+            <div class="post-meta">
+              <span class="post-tag">Business</span>
+              <span class="post-meta-sep">·</span>
+              <span class="post-read-time">4 min</span>
+            </div>
+            <div class="list-post-title">The Weekly Update Template That Keeps Every Client Happy</div>
+            <p class="list-post-excerpt">The exact format we send every Friday to every client — and why it's responsible for our 98% client retention rate.</p>
+            <div class="list-post-footer">
+              <img class="author-av"
+                src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&auto=format&fit=crop&q=80"
+                alt="Rohan Menon" />
+              <div>
+                <div class="list-post-footer-name">Rohan Menon</div>
+                <span class="list-post-footer-date">Mar 3, 2026</span>
+              </div>
+            </div>
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── CTA BANNER ─── -->
+  <section id="cta-banner">
+    <div class="wrap">
+      <div class="cta-inner reveal">
+        <div class="cta-text">
+          <h2>Ready to build something<br />with us?</h2>
+          <p>You've read enough. Let's get on a call and talk about what you're building.</p>
+        </div>
+        <div class="cta-actions">
+          <a href="liftabit.html#contact" class="btn btn-orange btn-arrow">Start a Project</a>
+          <a href="services.html" class="btn btn-ghost">Explore Services</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FOOTER ─── -->
+  <footer>
+    <div class="wrap">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="#" class="footer-logo-wrap"><img src="logo1.svg" alt="Liftabit" class="footer-logo-img" /></a>
+          <p>Crafting affordable, world-class web and mobile solutions for individuals and organizations across every
+            industry.</p>
+          <div class="footer-socials">
+            <a href="#" class="f-social" aria-label="Mail">
+              <svg viewBox="0 0 24 24">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                <polyline points="22,6 12,13 2,6" />
+              </svg>
+            </a>
+            <a href="#" class="f-social" aria-label="LinkedIn">
+              <svg viewBox="0 0 24 24">
+                <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z" />
+                <circle cx="4" cy="4" r="2" />
+              </svg>
+            </a>
+            <a href="#" class="f-social" aria-label="Instagram">
+              <svg viewBox="0 0 24 24">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z" />
+                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+              </svg>
+            </a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h5>Services</h5>
+          <ul>
+            <li><a href="#">Web Development</a></li>
+            <li><a href="#">Mobile Apps</a></li>
+            <li><a href="#">UI/UX Design</a></li>
+            <li><a href="#">Custom Software</a></li>
+            <li><a href="#">Cloud & DevOps</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>Company</h5>
+          <ul>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Our Process</a></li>
+            <li><a href="#">Portfolio</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Careers</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>Legal</h5>
+          <ul>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="#">Cookie Policy</a></li>
+            <li><a href="#">hello@liftabit.com</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; <span id="footerYear"></span> <b>Liftabit</b>. All rights reserved.</p>
+        <p>Built with precision in <b>Coimbatore, India</b></p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Mobile Nav
+    (function () {
+      const hamburger = document.getElementById('hamburger');
+      const mobileNav = document.getElementById('mobileNav');
+      const overlay = document.getElementById('navOverlay');
+      const mobileLinks = document.querySelectorAll('.mobile-link, .mobile-cta');
+      let isOpen = false;
+
+      function openMenu() {
+        isOpen = true;
+        mobileNav.classList.add('open');
+        overlay.classList.add('show');
+        hamburger.classList.add('is-open');
+        hamburger.setAttribute('aria-expanded', 'true');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeMenu() {
+        isOpen = false;
+        mobileNav.classList.remove('open');
+        overlay.classList.remove('show');
+        hamburger.classList.remove('is-open');
+        hamburger.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+      }
+
+      hamburger.addEventListener('click', () => isOpen ? closeMenu() : openMenu());
+      mobileLinks.forEach(l => l.addEventListener('click', closeMenu));
+      overlay.addEventListener('click', closeMenu);
+      document.addEventListener('keydown', e => { if (e.key === 'Escape' && isOpen) closeMenu() });
+      window.addEventListener('resize', () => { if (window.innerWidth > 960 && isOpen) closeMenu() }, { passive: true });
+    })();
+
+    // Scroll reveal
+    const revealObs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('in'); revealObs.unobserve(e.target) }
+      })
+    }, { threshold: 0.08, rootMargin: '0px 0px -32px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+    // Nav scroll shadow
+    window.addEventListener('scroll', () => {
+      document.getElementById('mainNav').classList.toggle('scrolled', scrollY > 40)
+    }, { passive: true });
+
+    // Footer year
+    document.getElementById('footerYear').textContent = new Date().getFullYear();
+
+    // Category filter
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const blogCards = document.querySelectorAll('.blog-card, .list-post');
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const filter = btn.dataset.filter;
+
+        blogCards.forEach(card => {
+          const cat = card.dataset.category;
+          if (filter === 'all' || cat === filter) {
+            card.removeAttribute('data-hidden');
+            card.style.display = '';
+          } else {
+            card.setAttribute('data-hidden', 'true');
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    // Newsletter subscription
+    function subscribeNL() {
+      const email = document.getElementById('nlEmail').value.trim();
+      const note = document.getElementById('nlNote');
+      if (!email || !email.includes('@')) {
+        document.getElementById('nlEmail').style.borderColor = '#ef4444';
+        setTimeout(() => { document.getElementById('nlEmail').style.borderColor = '' }, 1500);
+        return;
+      }
+      document.getElementById('nlEmail').value = '';
+      note.textContent = '🎉 You\'re in! First edition lands in your inbox soon.';
+      note.style.color = 'rgba(255, 119, 0, 0.9)';
+    }
+  </script>
+</body>
+
+</html>

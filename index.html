@@ -2181,6 +2181,16 @@
       }
     }
 
+        .error {
+  color: #d93025;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.input-error {
+  border: 1px solid #d93025;
+}
+
     /* ══════════════════════════════
    AMBIENT SECTION ANIMATIONS
 ══════════════════════════════ */
@@ -3102,6 +3112,7 @@
               <div class="form-field">
                 <label for="femail">Email</label>
                 <input type="email" id="femail" placeholder="you@company.com" />
+                <small id="emailError" class="error"></small>
               </div>
             </div>
             <div class="form-field">
@@ -3319,15 +3330,37 @@
     // CONTACT FORM
     // ═══════════════════════════════════════════════════
 function submitForm() {
-  const name = document.getElementById('fname').value.trim();
-  const email = document.getElementById('femail').value.trim();
-  const msg = document.getElementById('fmsg').value.trim();
+  const nameEl = document.getElementById('fname');
+  const emailEl = document.getElementById('femail');
+  const msgEl = document.getElementById('fmsg');
 
+  const name = nameEl.value.trim();
+  const email = emailEl.value.trim();
+  const msg = msgEl.value.trim();
+
+  // Reset styles
+  emailEl.style.border = "";
+  nameEl.style.border = "";
+  msgEl.style.border = "";
+
+  // 🔴 Empty field check
   if (!name || !email || !msg) {
     alert("Please fill all fields");
     return;
   }
 
+  // ✅ Strong email validation
+  const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-z]{2,}$/;
+
+  if (!emailPattern.test(email) || email.split("@").length !== 2) {
+    emailEl.style.border = "2px solid #d93025"; // Gmail red
+    emailEl.focus();
+    emailEl.value = "";
+    emailEl.placeholder = "Enter valid email (example@gmail.com)";
+    return;
+  }
+
+  // ✅ Your existing Google Script URL
   const scriptURL = "https://script.google.com/macros/s/AKfycbxqLGreRNMI9UNMgSqd-Vs_0h-oyJCIhALIfWL9-BThOK34DtAy7bMwjt0fMDt2eCdf/exec";
 
   const url = scriptURL +
@@ -3335,13 +3368,13 @@ function submitForm() {
     "&email=" + encodeURIComponent(email) +
     "&message=" + encodeURIComponent(msg);
 
-  // 🔥 Create hidden iframe
+  // 🔥 Hidden iframe (your method)
   const iframe = document.createElement("iframe");
   iframe.style.display = "none";
   iframe.src = url;
   document.body.appendChild(iframe);
 
-  // UI feedback
+  // ✅ Success UI
   showSuccess();
 }
     function showSuccess() {
